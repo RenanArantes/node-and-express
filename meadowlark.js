@@ -11,9 +11,20 @@ app.use(express.static(__dirname + "/public"));
 
 const port = process.env.PORT || 3000;
 
+const fortunes = [
+  "Conquer your fears or they will conquer you.",
+  "Rivers need springs.",
+  "Do not fear what you don't know",
+  "You will have a pleasant surprise.",
+];
+
 app.get("/", (req, res) => res.render("home"));
 
-app.get("/about", (req, res) => res.render("about"));
+app.get("/about", (req, res) => {
+  const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+
+  res.render("about", { fortune: randomFortune });
+});
 
 // pagina 404 personalizada
 app.use((req, res) => {
