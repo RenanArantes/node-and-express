@@ -1,2 +1,11 @@
 #ignora pacotes instalados pelo npm
 node_modules
+
+#ignora arquivos de log
+*.log
+
+#ignora arquivos temporários
+*~
+
+# MAC
+.DS_Store
