@@ -1,5 +1,17 @@
+{{#section "head"}}
+  <meta name="robots" content="noindex" />
+{{/section}}
+
 <h1>About Meadowlark Travel</h1>
+
 {{#if fortune}}
   <p>Yout fortune for the day</p>
   <blockquote>{{fortune}}</blockquote>
 {{/if}}
+
+{{#section "scripts"}}
+  <script>
+    const div = document.createElement('div'); div.appendChild(document.createTextNode('(scripting works)'));
+    document.querySelector('body').appendChild(div);
+  </script>
+{{/section}}
