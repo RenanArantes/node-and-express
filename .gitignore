@@ -12,3 +12,6 @@ node_modules
 
 # testes coverage
 coverage
+
+# credentials ex: .credentials.{envName}.json
+.credentials.*

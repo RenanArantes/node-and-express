@@ -1,10 +1,14 @@
 const express = require("express");
 const expressHandlebars = require("express-handlebars");
-const bodyParser = require("body-parser");
 const multiparty = require("multiparty");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const expressSession = require("express-session");
 
 const handlers = require("./libs/handlers");
 const weatherMiddleware = require("./libs/middleware/weather");
+const flashMiddleware = require("./libs/middleware/flash");
+const { credentials } = require("./config");
 
 const app = express();
 
@@ -30,11 +34,22 @@ app.disable("x-powered-by");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(cookieParser(credentials.cookieSecret));
+app.use(
+  expressSession({
+    resave: false,
+    saveUninitialized: false,
+    secret: credentials.cookieSecret,
+  })
+);
+
 app.use(express.static(__dirname + "/public"));
 
 const port = process.env.PORT || 3000;
 
 app.use(weatherMiddleware);
+app.use(flashMiddleware);
 
 app.get("/", handlers.home);
 app.get("/about", handlers.about);
