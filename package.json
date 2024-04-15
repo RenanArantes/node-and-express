@@ -7,18 +7,23 @@
     "test": "jest",
     "test-watch": "jest -- --watch",
     "dev": "nodemon meadowlark.js",
-    "md-dev": "nodemon mdTest.js"
+    "md-dev": "nodemon mdTest.js",
+    "forevis": "forever start meadowlark.js",
+    "stress": "artillery quick --count 10 -n 20 http://localhost:3000/about"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "artillery": "^2.0.9",
     "body-parser": "^1.20.2",
     "bootstrap": "^5.3.3",
     "cookie-parser": "^1.4.6",
     "express": "^4.18.3",
     "express-handlebars": "^7.1.2",
     "express-session": "^1.18.0",
+    "forever": "^4.0.3",
     "html-to-formatted-text": "^2.7.0",
+    "morgan": "^1.10.0",
     "multiparty": "^4.2.3",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0"

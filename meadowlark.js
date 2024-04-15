@@ -4,6 +4,7 @@ const multiparty = require("multiparty");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
+const cluster = require("cluster");
 
 const handlers = require("./libs/handlers");
 const weatherMiddleware = require("./libs/middleware/weather");
@@ -51,6 +52,23 @@ const port = process.env.PORT || 3000;
 app.use(weatherMiddleware);
 app.use(flashMiddleware);
 
+app.use((req, res, next) => {
+  if (cluster.isWorker) console.log("Worker %d received request", cluster.worker.id);
+
+  next();
+});
+
+app.get("/fail", (req, res) => {
+  console.log("fail route requested");
+  throw new Error("Nope!");
+});
+
+app.get("/epic-fail", (req, res) => {
+  process.nextTick(() => {
+    throw new Error("Kaboom!");
+  });
+});
+
 app.get("/", handlers.home);
 app.get("/about", handlers.about);
 
@@ -90,10 +108,17 @@ app.use(handlers.notFound);
 // pagina 500 personalizada
 app.use(handlers.serverError);
 
-if (require.main === module) {
-  app.listen(port, (error) => {
-    console.log(`Express started on http://localhost:${port}; press Ctrl-C to terminate.`);
+function startServer(port) {
+  app.listen(port, function () {
+    console.log("Express started in " + app.get("env") + " mode on http://localhost:" + port + "; press Ctrl-C to terminate.");
   });
+}
+
+if (require.main === module) {
+  // a aplicacao é executada diretamente; inicializa o servidor
+  startServer(process.env.PORT || 3000);
 } else {
-  module.exports = app;
+  // a aplicacao é importada como um modulo via "require":
+  // exporta a funcao para criar o servidor
+  module.exports = startServer;
 }
